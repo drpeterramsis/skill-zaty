@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Course, CourseVideo } from '../types';
-import { X, Clock, PlayCircle, User, Tag, BookOpen, ListVideo, PauseCircle, ExternalLink } from 'lucide-react';
+import { X, Clock, PlayCircle, User, Tag, BookOpen, ListVideo, PauseCircle, ExternalLink, Lock, RotateCw, Globe } from 'lucide-react';
 
 interface CourseModalProps {
   course: Course | null;
@@ -35,7 +35,7 @@ const CourseModal: React.FC<CourseModalProps> = ({ course, initialVideoIndex, on
         
         {/* Player / Header Section */}
         <div className="flex-shrink-0 bg-black relative w-full aspect-video md:aspect-[21/9] lg:aspect-video max-h-[50vh] group/player">
-          {/* External Link Overlay Button */}
+          {/* External Link Overlay Button - Always available for quick access */}
           <div className="absolute top-4 left-4 z-30 opacity-0 group-hover/player:opacity-100 transition-opacity duration-300">
              <a 
                href={currentExternalLink}
@@ -56,15 +56,72 @@ const CourseModal: React.FC<CourseModalProps> = ({ course, initialVideoIndex, on
           </button>
 
           {activeVideo ? (
-            <div className="absolute inset-0 z-10">
-              <iframe 
-                src={activeVideo.link} 
-                className="w-full h-full" 
-                frameBorder="0" 
-                allow="autoplay; fullscreen; picture-in-picture" 
-                allowFullScreen
-                title={activeVideo.title}
-              ></iframe>
+            /* SIMULATED BROWSER INTERFACE 
+               Replaces iframe to avoid X-Frame-Options and privacy errors while maintaining app immersion.
+            */
+            <div className="absolute inset-0 z-10 bg-slate-100 flex flex-col">
+                {/* Browser Chrome / Header */}
+                <div className="bg-slate-800 px-4 py-2 flex items-center gap-4 shrink-0 border-b border-slate-700">
+                    {/* Traffic Lights */}
+                    <div className="flex gap-1.5">
+                        <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                        <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
+                        <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+                    </div>
+                    {/* URL Bar */}
+                    <div className="flex-1 bg-slate-900/50 h-8 rounded-md flex items-center px-3 text-xs text-slate-400 font-mono border border-slate-700/50">
+                        <Lock size={10} className="mr-2 text-slate-500" />
+                        <span className="truncate opacity-80">{activeVideo.link}</span>
+                    </div>
+                    {/* Actions */}
+                    <div className="flex gap-3 text-slate-400">
+                        <button className="hover:text-white cursor-pointer bg-transparent border-0 p-0 text-inherit" title="Refresh">
+                            <RotateCw size={14} />
+                        </button>
+                        <button 
+                            className="hover:text-white cursor-pointer bg-transparent border-0 p-0 text-inherit" 
+                            title="Open in New Tab" 
+                            onClick={() => window.open(activeVideo.link, '_blank')}
+                        >
+                            <ExternalLink size={14} />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Content Placeholder */}
+                <div className="flex-1 relative flex flex-col items-center justify-center p-6 bg-slate-50 overflow-hidden">
+                    {/* Blurry Background of Thumbnail */}
+                    <div className="absolute inset-0">
+                        <img src={course.thumbnail} alt="" className="w-full h-full object-cover blur-lg opacity-30 scale-110" />
+                        <div className="absolute inset-0 bg-white/40 backdrop-blur-sm" />
+                    </div>
+                    
+                    {/* Access Card */}
+                    <div className="relative z-10 bg-white/80 backdrop-blur-md p-8 rounded-2xl shadow-xl border border-white/50 max-w-md w-full text-center">
+                        <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-violet-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg shadow-indigo-200">
+                            <Globe size={32} />
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-900 mb-2">External Content</h3>
+                        <p className="text-slate-600 mb-6 text-sm leading-relaxed">
+                            This lesson is hosted on <strong>{course.source}</strong>. 
+                            <br/>
+                            We've prepared a secure link for you to view it.
+                        </p>
+                        <a 
+                            href={activeVideo.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center w-full py-3.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all transform hover:scale-[1.02] shadow-lg shadow-indigo-200 group/btn"
+                        >
+                            <span>Open Lesson</span>
+                            <ExternalLink size={18} className="ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                        </a>
+                        <div className="mt-4 pt-4 border-t border-slate-200/60 text-[10px] text-slate-400 uppercase tracking-wider font-semibold flex justify-between">
+                            <span>{activeVideo.duration}</span>
+                            <span className="truncate max-w-[180px]">{activeVideo.title}</span>
+                        </div>
+                    </div>
+                </div>
             </div>
           ) : (
             <>
@@ -179,7 +236,6 @@ const CourseModal: React.FC<CourseModalProps> = ({ course, initialVideoIndex, on
                             {isActive ? <PauseCircle size={20} /> : <PlayCircle size={20} />}
                           </div>
                           <div className="flex-1 min-w-0">
-                            {/* Changed from truncate to break-words for wrapping */}
                             <p className={`text-sm font-medium mb-1 leading-snug break-words ${isActive ? 'text-indigo-700' : 'text-slate-800'}`}>
                               <span className="text-slate-400 font-normal text-xs mr-1">#{index + 1}</span>
                               {video.title}
