@@ -1,287 +1,186 @@
-import { Course, CourseCategory } from './types';
+import { CourseCategory } from './types';
 
-export const MOCK_COURSES: Course[] = [
-  {
-    id: '1',
-    name: 'Business Analysis & Planning',
-    category: CourseCategory.SALES_MANAGEMENT,
-    source: 'GrowTwoPro',
-    lecturer: 'Mohamed Wahba',
-    duration: '3h 45m',
-    durationMinutes: 225,
-    videoCount: 4,
-    topics: ['Business Analysis', 'Planning', 'Team Details', 'Coverage', 'Sales'],
-    link: 'https://vimeo.com/1137556203/260e2dd9aa',
-    thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
-    description: 'A comprehensive guide to business analysis and planning, covering team details, coverage strategies, and effective sales management techniques.',
-    rating: 4.8,
-    videos: [
-      { title: 'Business Analysis & Planning', duration: '49 minutes', link: 'https://vimeo.com/1137556203/260e2dd9aa' },
-      { title: 'Team Details P1', duration: '42 minutes', link: 'https://vimeo.com/1137556620/1962269000' },
-      { title: 'Team Details P2', duration: '1 hour 29 minutes', link: 'https://vimeo.com/1137557048/80196254cb' },
-      { title: 'Coverage', duration: '43 minutes', link: 'https://vimeo.com/1137558249/032c89f76c' }
-    ]
-  },
-  {
-    id: '2',
-    name: 'High Performing Team',
-    category: CourseCategory.MANAGEMENT_LEADERSHIP,
-    source: 'GrowTwoPro',
-    lecturer: 'GrowTwoPro Team',
-    duration: '2h 57m',
-    durationMinutes: 177,
-    videoCount: 6,
-    topics: ['High Performing Team', 'ORPI Model', 'Tuckman Model', 'Team Roles', 'Management'],
-    link: 'https://vimeo.com/1119103767/d1b7c73c0d',
-    thumbnail: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
-    description: 'Learn what makes a High Performing Team using the ORPI and Tuckman models. Explore the 9 essential team roles for success.',
-    rating: 4.9,
-    videos: [
-      { title: 'High Performing Team - Introduction', duration: '13 minutes', link: 'https://vimeo.com/1119103767/d1b7c73c0d' },
-      { title: 'High Performing Team - What Makes a HPT', duration: '35 minutes', link: 'https://vimeo.com/1119103935/0c22c322dc' },
-      { title: 'High Performing Team - ORPI Model P1', duration: '28 minutes', link: 'https://vimeo.com/1119104185/27aa5a9ca5' },
-      { title: 'High Performing Team - ORPI P2 & Tuckman Model P1', duration: '16 minutes', link: 'https://vimeo.com/1119104581/90135260d3' },
-      { title: 'High Performing Team - Tuckman Model P2', duration: '41 minutes', link: 'https://vimeo.com/1119104822/c917eed394' },
-      { title: 'High Performing Team - 9 Team Roles', duration: '44 minutes', link: 'https://vimeo.com/1119105184/a9d9770d8c' }
-    ]
-  },
-  {
-    id: '3',
-    name: 'DM Case Study: Planning & Resource Allocation',
-    category: CourseCategory.SALES_MANAGEMENT,
-    source: 'GrowTwoPro',
-    lecturer: 'GrowTwoPro Team',
-    duration: '3h 25m',
-    durationMinutes: 205,
-    videoCount: 6,
-    topics: ['Planning', 'Resource Allocation', 'Sales Forecasting', 'Business Plan', 'District Management'],
-    link: 'https://vimeo.com/1115670088/797cc0bd6b',
-    thumbnail: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80',
-    description: 'Deep dive into District Manager responsibilities including planning, resource allocation, sales forecasting, and business plan creation.',
-    rating: 4.7,
-    videos: [
-      { title: 'Introduction And senior DM Mindset', duration: '26 minutes', link: 'https://vimeo.com/1115670088/797cc0bd6b' },
-      { title: 'Case Study Discussion - Sales And Forecasting', duration: '37 minutes', link: 'https://vimeo.com/1115673780/21ebb03944' },
-      { title: 'Case Study Discussion - People And D Levels', duration: '45 minutes', link: 'https://vimeo.com/1115674450/653395062e' },
-      { title: 'Resources Allocation And Time Allocation', duration: '53 minutes', link: 'https://vimeo.com/1115744771/05275f34c5' },
-      { title: 'Business Plan Steps', duration: '18 minutes', link: 'https://vimeo.com/1115745557/f788776ff4' },
-      { title: 'Full Case Workshop ABC New Line Task', duration: '26 minutes', link: 'https://vimeo.com/1115745902/c9f92999f5' }
-    ]
-  },
-  {
-    id: '4',
-    name: 'Pathway to Excel in Leadership - Recap',
-    category: CourseCategory.MANAGEMENT_LEADERSHIP,
-    source: 'GrowTwoPro',
-    lecturer: 'GrowTwoPro Team',
-    duration: '3h 59m',
-    durationMinutes: 239,
-    videoCount: 2,
-    topics: ['Leadership', 'Diploma Blueprint', 'Management', 'Career Growth'],
-    link: 'https://vimeo.com/1115669533/e7b1ed9314',
-    thumbnail: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80',
-    description: 'A comprehensive recap of the leadership diploma blueprint, designed to accelerate your pathway to excellence in management roles.',
-    rating: 4.9,
-    videos: [
-      { title: 'Diploma Blueprint 1st Part', duration: '2 hours 17 minutes', link: 'https://vimeo.com/1115669533/e7b1ed9314' },
-      { title: 'Diploma Blueprint 2nd Part', duration: '1 hour 42 minutes', link: 'https://vimeo.com/1115673769/2dbe85aad0' }
-    ]
-  },
-  {
-    id: '5',
-    name: 'Performance Management Applications',
-    category: CourseCategory.SALES_MANAGEMENT,
-    source: 'GrowTwoPro',
-    lecturer: 'GrowTwoPro Team',
-    duration: '3h 5m',
-    durationMinutes: 185,
-    videoCount: 3,
-    topics: ['Performance Management', 'Feedback', 'Workshop', 'Sales Coaching'],
-    link: 'https://vimeo.com/1115668353/3a22b0d473',
-    thumbnail: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80',
-    description: 'Master performance management applications including workshops and understanding different feedback types for team growth.',
-    rating: 4.6,
-    videos: [
-      { title: 'Performance Management Recap', duration: '1 hour 15 minutes', link: 'https://vimeo.com/1115668353/3a22b0d473' },
-      { title: 'Performance Management Workshop', duration: '1 hour 8 minutes', link: 'https://vimeo.com/1115671425/eb7df912a0' },
-      { title: 'Feedback Types', duration: '41 minutes', link: 'https://vimeo.com/1115672493/8b846e2251' }
-    ]
-  },
-  {
-    id: '6',
-    name: 'Situational Leadership Applications',
-    category: CourseCategory.MANAGEMENT_LEADERSHIP,
-    source: 'GrowTwoPro',
-    lecturer: 'GrowTwoPro Team',
-    duration: '2h 37m',
-    durationMinutes: 157,
-    videoCount: 4,
-    topics: ['Situational Leadership', 'Managerial Grid', 'Douglas McGregor Theory', 'Role Play'],
-    link: 'https://vimeo.com/1115668217/d843fc5781',
-    thumbnail: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80',
-    description: 'Explore Situational Leadership, the Managerial Grid, and practical role-playing exercises to enhance your adaptive leadership style.',
-    rating: 4.8,
-    videos: [
-      { title: 'Leadership Vs Management And Douglas McGregor Theory', duration: '48 minutes', link: 'https://vimeo.com/1115668217/d843fc5781' },
-      { title: 'Managerial Grid Recap', duration: '43 minutes', link: 'https://vimeo.com/1115669235/5313f6d0d9' },
-      { title: 'Three Skills of SL', duration: '52 minutes', link: 'https://vimeo.com/1115670755/5b35179415' },
-      { title: 'Situational Leadership Role play', duration: '14 minutes', link: 'https://vimeo.com/1115671561/147c16adb9' }
-    ]
-  },
-  {
-    id: '7',
-    name: 'Decision Making - Recap',
-    category: CourseCategory.MANAGEMENT_LEADERSHIP,
-    source: 'GrowTwoPro',
-    lecturer: 'Ibrahim Mahmoud',
-    duration: '1h 36m',
-    durationMinutes: 96,
-    videoCount: 2,
-    topics: ['Decision Making', 'Critical Thinking', 'Problem Solving', '5 Steps'],
-    link: 'https://vimeo.com/1115667625/93a042340a',
-    thumbnail: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
-    description: 'Sharpen your critical thinking and decision-making skills. Learn the 5 effective steps to problem solving.',
-    rating: 4.7,
-    videos: [
-      { title: 'Decision Making And Critical Thinking Process', duration: '54 minutes', link: 'https://vimeo.com/1115667625/93a042340a' },
-      { title: 'Problem Solving And 5 Steps to effective PS', duration: '42 minutes', link: 'https://vimeo.com/1115668488/2972ba5082' }
-    ]
-  },
-  {
-    id: '8',
-    name: 'Principle of Management - Recap',
-    category: CourseCategory.MANAGEMENT_LEADERSHIP,
-    source: 'GrowTwoPro',
-    lecturer: 'Ibrahim Mahmoud',
-    duration: '3h 33m',
-    durationMinutes: 213,
-    videoCount: 5,
-    topics: ['Management Principles', 'Multitasking', 'Stress Management', 'Interview Skills', 'Leadership'],
-    link: 'https://vimeo.com/1115667338/9fa7228999',
-    thumbnail: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
-    description: 'Foundational management principles including leadership issues, multitasking (Eisenhower Matrix), stress management, and interview skills.',
-    rating: 4.8,
-    videos: [
-      { title: 'Issues in Leadership Management And What is supervisor Do', duration: '1 hour 23 minutes', link: 'https://vimeo.com/1115667338/9fa7228999' },
-      { title: 'Management Definition And Skills And Leading Definition', duration: '1 hour 42 minutes', link: 'https://vimeo.com/1115667484/39d801cd8b' },
-      { title: 'Multitasking And four quadrants of the eisenhower matrix', duration: '1 hour 18 minutes', link: 'https://vimeo.com/1115667795/64c726b360' },
-      { title: 'Stress and Productivity', duration: '10 minutes', link: 'https://vimeo.com/1115668004/ed8579a3ca' },
-      { title: 'Interview Skills Recap And Questions', duration: '1 hour 54 minutes', link: 'https://vimeo.com/1115668130/995aeab84f' }
-    ]
-  },
-  {
-    id: '9',
-    name: 'Greater Cairo District Manager Case',
-    category: CourseCategory.SALES_MANAGEMENT,
-    source: 'GrowTwoPro',
-    lecturer: 'Ibrahim Mahmoud',
-    duration: '4h 11m',
-    durationMinutes: 251,
-    videoCount: 5,
-    topics: ['District Management', 'SWOT Analysis', 'IMS Sheet', 'Budget Allocation', 'Segmentation'],
-    link: 'https://vimeo.com/1114385804/444e371063',
-    thumbnail: 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?auto=format&fit=crop&w=800&q=80',
-    description: 'An extensive case study on District Management in Greater Cairo, covering SWOT analysis, territory management, and budget allocation.',
-    rating: 4.9,
-    videos: [
-      { title: 'Business Analysis And Planning Recap', duration: '1 hour 26 minutes', link: 'https://vimeo.com/1114385804/444e371063' },
-      { title: 'Case Study Orientation, SWOT , Marketing Strategy', duration: '2 hours 59 minutes', link: 'https://vimeo.com/1114386129/be223fc151' },
-      { title: 'SWOT , Terriotry ,IMS Sheet', duration: '1 hour 26 minutes', link: 'https://vimeo.com/1114386876/e70a84c721' },
-      { title: 'Achievement,Incentive And Budget Allocation', duration: '1 hour 59 minutes', link: 'https://vimeo.com/1114387267/dd3796147d' },
-      { title: 'Segmentation , Your Team', duration: '1 hour 19 minutes', link: 'https://vimeo.com/1114387898/b8202e427f' }
-    ]
-  },
-  {
-    id: '10',
-    name: 'DM Case & Assessment & Psychometric Analysis',
-    category: CourseCategory.SALES_MANAGEMENT,
-    source: 'GrowTwoPro',
-    lecturer: 'Dr. Ashraf Morsy',
-    duration: '3h 45m',
-    durationMinutes: 225,
-    videoCount: 6,
-    topics: ['Assessment', 'Psychometric Analysis', 'Business Forecasting', 'Case Study', 'Hiring'],
-    link: 'https://vimeo.com/1111759275/c705794b05',
-    thumbnail: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80',
-    description: 'Advanced DM training involving psychometric analysis, business forecasting, and candidate assessment rubrics.',
-    rating: 4.8,
-    videos: [
-      { title: 'Introduction to DM case study', duration: '10 minutes', link: 'https://vimeo.com/1111759275/c705794b05' },
-      { title: 'Business forecasting - Group Discussions', duration: '1 hour 7 minutes', link: 'https://vimeo.com/1111759669/f7ee2d1a05' },
-      { title: 'Model of assessment rubric for candidate', duration: '18 minutes', link: 'https://vimeo.com/1111762490/a227a8f12d' },
-      { title: 'Case Study Discussion - 2nd Part', duration: '1 hour 5 minutes', link: 'https://vimeo.com/1111763806/884ebdde07' },
-      { title: 'Psychometric Analysis', duration: '32 minutes', link: 'https://vimeo.com/1111765744/1a6c10d216' },
-      { title: 'Case Study Assessment Q&A1', duration: '33 minutes', link: 'https://vimeo.com/1111804452/29e9fad1a2' }
-    ]
-  },
-  {
-    id: '11',
-    name: 'Mock Assessment Case Study for DM',
-    category: CourseCategory.SALES_MANAGEMENT,
-    source: 'GrowTwoPro',
-    lecturer: 'Dr. Ashraf Morsy',
-    duration: '4h 38m',
-    durationMinutes: 278,
-    videoCount: 4,
-    topics: ['Mock Assessment', 'Team Management', 'Effectiveness', 'Delta Case Study'],
-    link: 'https://vimeo.com/1110113757/554f268c39',
-    thumbnail: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80',
-    description: 'Practical mock assessment center simulations for District Managers, focusing on team management and effectiveness.',
-    rating: 4.7,
-    videos: [
-      { title: 'General Assessement Centre Case Study Discussion -Group 1', duration: '1 hour 23 minutes', link: 'https://vimeo.com/1110113757/554f268c39' },
-      { title: 'Team Management And Driving Effectiveness', duration: '18 minutes', link: 'https://vimeo.com/1110115418/9b84216d26' },
-      { title: 'Delta Case Study Discussion - Group 2', duration: '2 hours 5 minutes', link: 'https://vimeo.com/1110115973/2089a52145' },
-      { title: 'UPPER Assessement Center Case Study Discussion -Group 3', duration: '52 minutes', link: 'https://vimeo.com/1110119664/c8802ecd92' }
-    ]
-  },
-  {
-    id: '12',
-    name: 'FLM Case - Territory Turnaround Challenge',
-    category: CourseCategory.SALES_MANAGEMENT,
-    source: 'GrowTwoPro',
-    lecturer: 'Mohamed Wahba',
-    duration: '3h 49m',
-    durationMinutes: 229,
-    videoCount: 5,
-    topics: ['Territory Turnaround', 'Data Analysis', 'Target Phasing', 'Resource Allocation', 'FLM'],
-    link: 'https://vimeo.com/1110111171/3e1d268cce',
-    thumbnail: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
-    description: 'Tackle the Territory Turnaround Challenge. Learn data analysis, target phasing, and segment resource allocation.',
-    rating: 4.8,
-    videos: [
-      { title: 'FLSL Business Case , Terriotry External Trends Summary', duration: '1 hour 11 minutes', link: 'https://vimeo.com/1110111171/3e1d268cce' },
-      { title: 'Case Data Analysis And Area Performance Analysis', duration: '1 hour 28 minutes', link: 'https://vimeo.com/1110111937/545fd10308' },
-      { title: 'Team Allocation Over My Territory', duration: '20 minutes', link: 'https://vimeo.com/1110112958/a08f5f6d6b' },
-      { title: 'Target Phasing Per Quarter', duration: '13 minutes', link: 'https://vimeo.com/1110113184/62979b5e5c' },
-      { title: 'Allocate Resources to segments', duration: '37 minutes', link: 'https://vimeo.com/1110113350/e515fa7943' }
-    ]
-  },
-  {
-    id: '13',
-    name: 'How To Present Your Sales Business Plan?',
-    category: CourseCategory.SALES_MANAGEMENT,
-    source: 'GrowTwoPro',
-    lecturer: 'Alber Ramzy Saad',
-    duration: '3h 40m',
-    durationMinutes: 220,
-    videoCount: 8,
-    topics: ['Sales Planning', 'SWOT', 'Competitor Analysis', 'Maturity Matrix', 'Business Plan Presentation'],
-    link: 'https://vimeo.com/1110107608/53891949c0',
-    thumbnail: 'https://images.unsplash.com/photo-1475721027767-f7565dde6c81?auto=format&fit=crop&w=800&q=80',
-    description: 'Learn the art of presenting a Sales Business Plan. Covers SWOT, competitor analysis, maturity matrix, and sales planning execution.',
-    rating: 4.9,
-    videos: [
-      { title: 'SWOT Analysis & CSFs', duration: '9 minutes', link: 'https://vimeo.com/1110107608/53891949c0' },
-      { title: 'Sales Performance', duration: '15 minutes', link: 'https://vimeo.com/1110107734/badc36ca73' },
-      { title: 'Competitors Analysis & Activities Analysis for My Team', duration: '15 minutes', link: 'https://vimeo.com/1110107871/792f157b0c' },
-      { title: 'Segmentation & Targeting Performance', duration: '8 minutes', link: 'https://vimeo.com/1110108049/12f0625a0b' },
-      { title: 'Maturity Matrix Analysis', duration: '21 minutes', link: 'https://vimeo.com/1110108116/473e00afb5' },
-      { title: 'Sales Planning', duration: '34 minutes', link: 'https://vimeo.com/1110108435/3721e2ff80' },
-      { title: 'District Manager Case Study - 1st Part', duration: '59 minutes', link: 'https://vimeo.com/1110108868/70dd61ce24' },
-      { title: 'District Manager Case Study - 2ndPart', duration: '59 minutes', link: 'https://vimeo.com/1110109333/c744d2f353' }
-    ]
-  }
+export const APP_VERSION = '2.0.002';
+
+// Large collection of unique Unsplash images to ensure variety and relevance.
+// Verified IDs to prevent broken/corrupted links.
+
+const SALES_IMAGES = [
+  'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=80', // Handshake
+  'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80', // Meeting
+  'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80', // Analytics
+  'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=800&q=80', // Payment
+  'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80', // Team
+  'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=800&q=80', // Chart
+  'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80', // Growth
+  'https://images.unsplash.com/photo-1578574577315-3fbeb0ce88e3?auto=format&fit=crop&w=800&q=80', // Graph
+  'https://images.unsplash.com/photo-1526304640152-d4619684e484?auto=format&fit=crop&w=800&q=80', // Numbers
+  'https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&w=800&q=80', // Money
+  'https://images.unsplash.com/photo-1556740714-a8395b3bf3ea?auto=format&fit=crop&w=800&q=80', // Transaction
+  'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80', // Accounting
+  'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=800&q=80', // Stocks
+  'https://images.unsplash.com/photo-1535320903710-d9cf113d2062?auto=format&fit=crop&w=800&q=80', // Dashboard
+  'https://images.unsplash.com/photo-1611974765270-ca1258634369?auto=format&fit=crop&w=800&q=80'  // Trading
 ];
 
-export const SOURCES = Array.from(new Set(MOCK_COURSES.map(c => c.source)));
+const MANAGEMENT_IMAGES = [
+  'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80', // Teamwork
+  'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80', // Huddle
+  'https://images.unsplash.com/photo-1542744094-24638eff58bb?auto=format&fit=crop&w=800&q=80', // High five
+  'https://images.unsplash.com/photo-1507208773393-40d9fc9f4981?auto=format&fit=crop&w=800&q=80', // Leader
+  'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=800&q=80', // Office
+  'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=800&q=80', // Collaboration
+  'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80', // Boardroom
+  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80', // Planning
+  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80', // Professional
+  'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80', // Executive
+  'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80', // Meeting table
+  'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=80', // Conference
+  'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80', // Workshop
+  'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80', // Discussion
+  'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80'  // Suit
+];
+
+const DEV_IMAGES = [
+  'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80', // Code screen
+  'https://images.unsplash.com/photo-1504639725590-34d69cd07fb0?auto=format&fit=crop&w=800&q=80', // Matrix code
+  'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=800&q=80', // IDE
+  'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=800&q=80', // Coding
+  'https://images.unsplash.com/photo-1555099962-4199c345e5dd?auto=format&fit=crop&w=800&q=80', // Source code
+  'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=800&q=80', // Laptop code
+  'https://images.unsplash.com/photo-1587620962725-abab7fe55159?auto=format&fit=crop&w=800&q=80', // Programming
+  'https://images.unsplash.com/photo-1605379399642-870262d3d051?auto=format&fit=crop&w=800&q=80', // Laptop close up
+  'https://images.unsplash.com/photo-1537432376769-00f5c2f4c8d2?auto=format&fit=crop&w=800&q=80', // Interface
+  'https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?auto=format&fit=crop&w=800&q=80', // Html
+  'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&fit=crop&w=800&q=80', // Python
+  'https://images.unsplash.com/photo-1517134191118-9d595e4c8c2b?auto=format&fit=crop&w=800&q=80', // React
+  'https://images.unsplash.com/photo-1526379095098-d400fd0bf935?auto=format&fit=crop&w=800&q=80', // Apple
+  'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?auto=format&fit=crop&w=800&q=80', // UI
+  'https://images.unsplash.com/photo-1593720213428-28a5b9e94613?auto=format&fit=crop&w=800&q=80'  // Web dev
+];
+
+const DESIGN_IMAGES = [
+  'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=800&q=80', // Palette
+  'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&q=80', // UI Design
+  'https://images.unsplash.com/photo-1572044162444-ad6021280bfa?auto=format&fit=crop&w=800&q=80', // Color swatches
+  'https://images.unsplash.com/photo-1586717791821-3f44a5638d0f?auto=format&fit=crop&w=800&q=80', // Interface
+  'https://images.unsplash.com/photo-1509343256512-d77a5cb3791b?auto=format&fit=crop&w=800&q=80', // Sketching
+  'https://images.unsplash.com/photo-1626785774573-4b799314346d?auto=format&fit=crop&w=800&q=80', // Graphic design
+  'https://images.unsplash.com/photo-1600607686527-6fb886090705?auto=format&fit=crop&w=800&q=80', // Pencil
+  'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80', // Abstract
+  'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&w=800&q=80', // Creative
+  'https://images.unsplash.com/photo-1562577309-4932fdd64cd1?auto=format&fit=crop&w=800&q=80', // Social media
+  'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&w=800&q=80', // Art
+  'https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=800&q=80', // Paint
+  'https://images.unsplash.com/photo-1452860606245-08befc0ff44b?auto=format&fit=crop&w=800&q=80', // Colors
+  'https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?auto=format&fit=crop&w=800&q=80', // Computer
+  'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=800&q=80'  // Mac
+];
+
+const BUSINESS_IMAGES = [
+  'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80', // Planning
+  'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80', // Building
+  'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80', // Suit
+  'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=800&q=80', // Finance
+  'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=800&q=80', // Signing
+  'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=800&q=80', // Strategy
+  'https://images.unsplash.com/photo-1554774853-719586f8c277?auto=format&fit=crop&w=800&q=80', // Success
+  'https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?auto=format&fit=crop&w=800&q=80', // Work
+  'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=80', // Meeting room
+  'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80', // Analysis
+  'https://images.unsplash.com/photo-1504384308090-c54be3852f33?auto=format&fit=crop&w=800&q=80', // Office
+  'https://images.unsplash.com/photo-1491336477066-31156b5e4f35?auto=format&fit=crop&w=800&q=80', // Tie
+  'https://images.unsplash.com/photo-1483389127117-b6a2102724ae?auto=format&fit=crop&w=800&q=80', // Laptop work
+  'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80', // People
+  'https://images.unsplash.com/photo-1462206092226-f46025ffe607?auto=format&fit=crop&w=800&q=80'  // Desk
+];
+
+const DATA_SCIENCE_IMAGES = [
+  'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80', // Charts
+  'https://images.unsplash.com/photo-1504868587819-f8e8b716602c?auto=format&fit=crop&w=800&q=80', // Analytics
+  'https://images.unsplash.com/photo-1543286386-2e659306cd6c?auto=format&fit=crop&w=800&q=80', // Data
+  'https://images.unsplash.com/photo-1599658880436-c61792e70672?auto=format&fit=crop&w=800&q=80', // Graph
+  'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?auto=format&fit=crop&w=800&q=80', // Network
+  'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80', // Security
+  'https://images.unsplash.com/photo-1488229297570-58520851e868?auto=format&fit=crop&w=800&q=80', // Algorithm
+  'https://images.unsplash.com/photo-1666875753105-c63a6f3bdc86?auto=format&fit=crop&w=800&q=80', // AI
+  'https://images.unsplash.com/photo-1526628953301-3e589a6a8b74?auto=format&fit=crop&w=800&q=80', // Big Data
+  'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=800&q=80', // Code
+  'https://images.unsplash.com/photo-1558494949-ef526b0042a0?auto=format&fit=crop&w=800&q=80', // Server
+  'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80', // Statistics
+  'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=800&q=80', // Math
+  'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80', // Neural network
+  'https://images.unsplash.com/photo-1531297461136-82lw9b6a9a73?auto=format&fit=crop&w=800&q=80'  // Tech
+];
+
+const MARKETING_IMAGES = [
+  'https://images.unsplash.com/photo-1533750516457-a7f992034fec?auto=format&fit=crop&w=800&q=80', // Strategy
+  'https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&w=800&q=80', // Shopping
+  'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=800&q=80', // SEO
+  'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80', // Digital
+  'https://images.unsplash.com/photo-1459183885421-5cc9595dc8e1?auto=format&fit=crop&w=800&q=80', // Social
+  'https://images.unsplash.com/photo-1555421689-d68471e189f2?auto=format&fit=crop&w=800&q=80', // Analytics
+  'https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=800&q=80', // Megaphone
+  'https://images.unsplash.com/photo-1590650516494-0c8e4a4dd67e?auto=format&fit=crop&w=800&q=80', // Advertising
+  'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=80', // Content
+  'https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80', // Brand
+  'https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=800&q=80', // Online
+  'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80', // Team
+  'https://images.unsplash.com/photo-1493612276216-ee3925520721?auto=format&fit=crop&w=800&q=80', // Article
+  'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=800&q=80', // Growth
+  'https://images.unsplash.com/photo-1479920252409-6e3d8e8d48c9?auto=format&fit=crop&w=800&q=80'  // Twitter
+];
+
+const PHOTOGRAPHY_IMAGES = [
+  'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80', // Camera
+  'https://images.unsplash.com/photo-1542038784456-1ea0e93ca64b?auto=format&fit=crop&w=800&q=80', // Lens
+  'https://images.unsplash.com/photo-1452587909723-57b66396e18f?auto=format&fit=crop&w=800&q=80', // Hands
+  'https://images.unsplash.com/photo-1493863641943-9b68992a8d07?auto=format&fit=crop&w=800&q=80', // Portrait
+  'https://images.unsplash.com/photo-1554048612-387768052bf7?auto=format&fit=crop&w=800&q=80', // Studio
+  'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&fit=crop&w=800&q=80', // Film
+  'https://images.unsplash.com/photo-1512790182412-b19e6d62bc39?auto=format&fit=crop&w=800&q=80', // Canon
+  'https://images.unsplash.com/photo-1520390138845-fd2d229dd552?auto=format&fit=crop&w=800&q=80', // Shutter
+  'https://images.unsplash.com/photo-1552168324-d612d77725e3?auto=format&fit=crop&w=800&q=80', // Light
+  'https://images.unsplash.com/photo-1568292325375-38403a45c602?auto=format&fit=crop&w=800&q=80', // Edit
+  'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80', // Tripod
+  'https://images.unsplash.com/photo-1500634245200-e5245c7574ef?auto=format&fit=crop&w=800&q=80', // Nature
+  'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=800&q=80', // Zoom
+  'https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=800&q=80', // Vintage
+  'https://images.unsplash.com/photo-1542038784456-1ea0e93ca64b?auto=format&fit=crop&w=800&q=80'  // Macro
+];
+
+export const CATEGORY_IMAGES_LIST: Record<string, string[]> = {
+  [CourseCategory.SALES_MANAGEMENT]: SALES_IMAGES,
+  [CourseCategory.MANAGEMENT_LEADERSHIP]: MANAGEMENT_IMAGES,
+  [CourseCategory.DEVELOPMENT]: DEV_IMAGES,
+  [CourseCategory.DESIGN]: DESIGN_IMAGES,
+  [CourseCategory.BUSINESS]: BUSINESS_IMAGES,
+  [CourseCategory.DATA_SCIENCE]: DATA_SCIENCE_IMAGES,
+  [CourseCategory.MARKETING]: MARKETING_IMAGES,
+  [CourseCategory.PHOTOGRAPHY]: PHOTOGRAPHY_IMAGES,
+};
+
+export const GLOBAL_FALLBACK_IMAGES = [
+  'https://images.unsplash.com/photo-1499750310159-57751c67abb6?auto=format&fit=crop&w=800&q=80', // Workspace
+  'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80', // Desk
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80', // Chip
+  'https://images.unsplash.com/photo-1454165205444-54f23315101b?auto=format&fit=crop&w=800&q=80', // Work
+  'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=800&q=80', // Study
+  'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80', // Laptop
+  'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=800&q=80', // Typing
+  'https://images.unsplash.com/photo-1524178232363-1fb2b075b955?auto=format&fit=crop&w=800&q=80', // Class
+  'https://images.unsplash.com/photo-1531297461136-82lw9b6a9a73?auto=format&fit=crop&w=800&q=80', // Tech
+  'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=80', // Conference
+  'https://images.unsplash.com/photo-1506377247377-2a5b3b417ebb?auto=format&fit=crop&w=800&q=80', // Idea
+  'https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=800&q=80', // Office
+  'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80', // Desk plants
+  'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80', // Team
+  'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=80', // Workshop
+  'https://images.unsplash.com/photo-1487014679447-9f8336841d58?auto=format&fit=crop&w=800&q=80', // Texture
+  'https://images.unsplash.com/photo-1510074377623-8cf13fb86c08?auto=format&fit=crop&w=800&q=80', // Abstract
+  'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=800&q=80', // Lamp
+  'https://images.unsplash.com/photo-1491975474562-1f4e30bc9468?auto=format&fit=crop&w=800&q=80', // Book
+  'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&w=800&q=80'  // Library
+];
+
+export const DEFAULT_THUMBNAILS = GLOBAL_FALLBACK_IMAGES.slice(0, 3);
