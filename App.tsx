@@ -372,6 +372,10 @@ const App: React.FC = () => {
             <p className="mt-6 text-center text-xs text-slate-400 max-w-xs mx-auto leading-relaxed">
                 Enter your authorized email to access. No password required.
             </p>
+            
+            <div className="mt-4 flex justify-center">
+               <span className="text-[10px] font-mono text-slate-300 bg-slate-50 px-2 py-1 rounded-full">v{APP_VERSION}</span>
+            </div>
             </div>
         )}
       </div>
