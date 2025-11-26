@@ -1,9 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Filter, BookOpen, Layers, Clock, XCircle, PlayCircle, Loader2, AlertCircle, Database, Copy, Check, RefreshCw, ArrowUp, PanelLeftClose, PanelLeftOpen, X } from 'lucide-react';
+import { Search, Filter, BookOpen, Layers, Clock, XCircle, PlayCircle, Loader2, AlertCircle, Database, Copy, Check, RefreshCw, ArrowUp, PanelLeftClose, PanelLeftOpen, X, LogOut, Mail, ArrowRight } from 'lucide-react';
 import { CourseCategory, Course, FilterState } from './types';
 import CourseCard from './components/CourseCard';
 import CourseModal from './components/CourseModal';
 import { fetchCoursesFromSupabase } from './services/courseDataService';
+import { supabase, signInWithEmail, signOut } from './services/supabaseClient';
 import { APP_VERSION } from './constants';
 
 const SETUP_SQL = `create table courses (
@@ -36,6 +37,11 @@ const DURATION_RANGES = [
 ];
 
 const App: React.FC = () => {
+  // Auth State
+  const [session, setSession] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  
+  // Data State
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,38 +60,46 @@ const App: React.FC = () => {
     durationRange: null
   });
 
+  // Login Form State
+  const [email, setEmail] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginMessage, setLoginMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
+
   // Version Check Logging
   useEffect(() => {
-    console.log(`%c SkillZaty v${APP_VERSION} Running `, 'background: #4f46e5; color: white; font-weight: bold; padding: 4px 8px; border-radius: 4px;');
+    console.log(`%c Skill-Zaty v${APP_VERSION} Running `, 'background: #4f46e5; color: white; font-weight: bold; padding: 4px 8px; border-radius: 4px;');
   }, []);
 
-  // Auto-scroll to top when filters change
+  // Auth Listener
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [filters]);
+    if (!supabase) {
+      setAuthLoading(false);
+      return;
+    }
 
-  // Handle Scroll to Top Visibility
-  // Since we removed overflow-y-auto from main, the window now scrolls
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setAuthLoading(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  // Fetch Data on Mount
+  // Fetch Data on Auth Success
   useEffect(() => {
+    if (!session) return;
+
     const loadCourses = async () => {
       try {
         setLoading(true);
         const data = await fetchCoursesFromSupabase();
         setCourses(data);
-        // Sidebar is kept closed by default (removed auto-open logic)
       } catch (err: any) {
         console.error("App load error:", err);
         const msg = err.message || '';
@@ -103,12 +117,50 @@ const App: React.FC = () => {
     };
 
     loadCourses();
+  }, [session]);
+
+  // Auto-scroll to top when filters change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [filters]);
+
+  // Handle Scroll to Top Visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const copySQL = () => {
     navigator.clipboard.writeText(SETUP_SQL);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginLoading(true);
+    setLoginMessage(null);
+    try {
+      const { error } = await signInWithEmail(email);
+      if (error) throw error;
+      setLoginMessage({ type: 'success', text: 'Check your email for the login link!' });
+    } catch (err: any) {
+      setLoginMessage({ type: 'error', text: err.message });
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut();
+    setSession(null);
   };
 
   // Derived Available Options for Sidebar
@@ -129,24 +181,20 @@ const App: React.FC = () => {
     return courses.filter(course => {
       const searchLower = filters.search.toLowerCase();
       
-      // Search: Name, Lecturer, Course Topics, OR Video Titles
       const matchesSearch = 
         course.name.toLowerCase().includes(searchLower) ||
         course.lecturer.toLowerCase().includes(searchLower) ||
         course.topics.some(t => t.toLowerCase().includes(searchLower)) ||
         course.videos.some(v => v.title.toLowerCase().includes(searchLower));
 
-      // Category
       const matchesCategory = 
         filters.categories.length === 0 || 
         filters.categories.includes(course.category);
 
-      // Source
       const matchesSource = 
         filters.sources.length === 0 || 
         filters.sources.includes(course.source);
 
-      // Duration
       let matchesDuration = true;
       if (filters.durationRange) {
         const range = DURATION_RANGES.find(r => r.key === filters.durationRange);
@@ -204,16 +252,77 @@ const App: React.FC = () => {
     setFilters(prev => ({ ...prev, search: '' }));
   };
 
-  if (loading) {
+  // Render Loading State (Auth or Data)
+  if (authLoading || (session && loading)) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center text-slate-500 font-inter">
         <Loader2 size={48} className="animate-spin text-indigo-600 mb-4" />
-        <h2 className="text-lg font-semibold text-slate-700">Loading SkillZaty Database...</h2>
-        <p className="text-sm">Fetching courses from Supabase</p>
+        <h2 className="text-lg font-semibold text-slate-700">
+          {authLoading ? 'Verifying Access...' : 'Loading Skill-Zaty Database...'}
+        </h2>
       </div>
     );
   }
 
+  // Render Login Screen if not authenticated
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-slate-100 flex flex-col items-center justify-center p-4 font-inter">
+        <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-200">
+          <div className="flex flex-col items-center mb-8">
+            <div className="bg-gradient-to-br from-indigo-600 to-violet-700 p-3 rounded-xl shadow-lg mb-4">
+              <Layers className="text-white" size={32} />
+            </div>
+            <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-violet-700">
+              Skill-Zaty
+            </h1>
+            <p className="text-slate-500 text-sm mt-2">v{APP_VERSION}</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-slate-400" />
+                </div>
+                <input
+                  type="email"
+                  id="email"
+                  required
+                  className="block w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={loginLoading}
+              className="w-full flex justify-center items-center gap-2 bg-indigo-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {loginLoading ? <Loader2 size={20} className="animate-spin" /> : <>Send Login Link <ArrowRight size={18} /></>}
+            </button>
+          </form>
+
+          {loginMessage && (
+            <div className={`mt-4 p-3 rounded-lg text-sm flex items-start gap-2 ${loginMessage.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+              {loginMessage.type === 'success' ? <Check size={16} className="mt-0.5" /> : <AlertCircle size={16} className="mt-0.5" />}
+              {loginMessage.text}
+            </div>
+          )}
+
+          <p className="mt-6 text-center text-xs text-slate-400">
+            Authorized access only. Enter your email to receive a magic login link.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Render Error State
   if (error) {
     const isTableError = error === 'TABLE_NOT_FOUND';
     return (
@@ -259,13 +368,22 @@ const App: React.FC = () => {
           </div>
         )}
 
-        <button 
-          onClick={() => window.location.reload()}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-medium"
-        >
-          <RefreshCw size={16} />
-          Reload Application
-        </button>
+        <div className="flex gap-4">
+           <button 
+             onClick={() => window.location.reload()}
+             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors shadow-sm font-medium"
+           >
+             <RefreshCw size={16} />
+             Reload Application
+           </button>
+           <button 
+             onClick={handleLogout}
+             className="flex items-center gap-2 px-4 py-2 bg-white text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors shadow-sm font-medium"
+           >
+             <LogOut size={16} />
+             Log Out
+           </button>
+        </div>
       </div>
     );
   }
@@ -291,7 +409,7 @@ const App: React.FC = () => {
                 <Layers className="text-white" size={20} />
               </div>
               <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 to-violet-700 tracking-tight">
-                SkillZaty
+                Skill-Zaty
               </h1>
             </div>
           </div>
@@ -326,7 +444,7 @@ const App: React.FC = () => {
              >
                <Filter size={24} />
              </button>
-             {/* Mobile Course Count - Now Visible */}
+             {/* Mobile Course Count */}
              <div className="flex items-center text-xs font-semibold bg-indigo-50 px-2 sm:px-3 py-1.5 rounded-full border border-indigo-100 text-indigo-700 whitespace-nowrap">
                 <span className="mr-1">{filteredCourses.length}</span> <span className="hidden sm:inline">Courses</span><span className="sm:hidden">Crse</span>
                 {filters.search && totalMatchingVideos > 0 && (
@@ -339,10 +457,18 @@ const App: React.FC = () => {
                    </>
                 )}
              </div>
+             {/* Logout Button */}
+             <button
+               onClick={handleLogout}
+               className="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors ml-1"
+               title="Log Out"
+             >
+               <LogOut size={20} />
+             </button>
           </div>
         </div>
         
-        {/* Mobile Search - Visible only on small screens */}
+        {/* Mobile Search */}
         <div className="md:hidden px-4 pb-4 border-t border-slate-100 pt-3">
              <div className="relative w-full">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -367,7 +493,7 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Sidebar Filters - Fixed Overlay */}
+      {/* Sidebar Filters */}
       <aside 
           className={`
               fixed left-0 bg-white border-r border-slate-200 shadow-2xl transform transition-transform duration-300 ease-in-out
@@ -569,7 +695,7 @@ const App: React.FC = () => {
              <div className="bg-slate-100 p-1 rounded">
                <Layers size={12} className="text-indigo-600" />
              </div>
-             <span className="font-semibold text-slate-700">SkillZaty</span>
+             <span className="font-semibold text-slate-700">Skill-Zaty</span>
              <span>© 2025</span>
            </div>
            <p className="font-mono text-[10px] text-slate-400 bg-slate-50 px-2 py-1 rounded">v{APP_VERSION}</p>

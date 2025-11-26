@@ -59,3 +59,13 @@ export const clearSupabaseConfig = () => {
     window.location.reload();
   }
 };
+
+export const signInWithEmail = async (email: string) => {
+  if (!supabase) throw new Error("Supabase not configured");
+  return supabase.auth.signInWithOtp({ email });
+};
+
+export const signOut = async () => {
+  if (!supabase) return;
+  return supabase.auth.signOut();
+};
