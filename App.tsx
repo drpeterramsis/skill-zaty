@@ -274,8 +274,8 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-slate-50 text-slate-900 font-inter flex flex-col relative">
       
       {/* Navbar */}
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,0.05)] h-16">
-        <div className="w-full px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+        <div className="w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             {/* Desktop Sidebar Toggle */}
             <button 
@@ -370,11 +370,11 @@ const App: React.FC = () => {
       {/* Sidebar Filters - Fixed Overlay */}
       <aside 
           className={`
-              fixed top-16 bottom-0 left-0 z-30 w-72 bg-white border-r border-slate-200 shadow-2xl transform transition-transform duration-300 ease-in-out
+              fixed left-0 bg-white border-r border-slate-200 shadow-2xl transform transition-transform duration-300 ease-in-out
+              top-0 bottom-0 z-50 w-72 md:top-16 md:bottom-0 md:z-30 md:w-72
               ${showFiltersMobile ? 'translate-x-0' : '-translate-x-full'}
               md:${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
           `}
-          style={{ height: 'calc(100vh - 64px)' }} // Ensure it doesn't go behind navbar
       >
         <div className="h-full overflow-y-auto p-5 pb-24 no-scrollbar">
           
