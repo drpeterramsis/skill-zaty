@@ -45,7 +45,7 @@ const App: React.FC = () => {
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [initialVideoIndex, setInitialVideoIndex] = useState<number | null>(null);
   const [showFiltersMobile, setShowFiltersMobile] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Default closed on desktop for full overlay effect, or true if preferred
   
   const [filters, setFilters] = useState<FilterState>({
     search: '',
@@ -60,6 +60,7 @@ const App: React.FC = () => {
   }, []);
 
   // Handle Scroll to Top Visibility
+  // Since we removed overflow-y-auto from main, the window now scrolls
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 300);
@@ -79,9 +80,10 @@ const App: React.FC = () => {
         setLoading(true);
         const data = await fetchCoursesFromSupabase();
         setCourses(data);
+        // Open sidebar by default on large screens if data loaded successfully
+        setIsSidebarOpen(window.innerWidth >= 1024);
       } catch (err: any) {
         console.error("App load error:", err);
-        // Handle specific error messages from service
         const msg = err.message || '';
         
         if (msg === 'TABLE_NOT_FOUND' || msg.includes('Could not find the table') || msg.includes('relation') || msg.includes('does not exist')) {
@@ -194,6 +196,10 @@ const App: React.FC = () => {
     });
   };
 
+  const clearSearch = () => {
+    setFilters(prev => ({ ...prev, search: '' }));
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center text-slate-500 font-inter">
@@ -264,8 +270,8 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-slate-50 text-slate-900 font-inter flex flex-col relative">
       
       {/* Navbar */}
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex-none">
-        <div className="w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-[0_1px_3px_rgba(0,0,0,0.05)] h-16">
+        <div className="w-full px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
           <div className="flex items-center gap-4">
             {/* Desktop Sidebar Toggle */}
             <button 
@@ -293,29 +299,38 @@ const App: React.FC = () => {
               </div>
               <input
                 type="text"
-                className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl leading-5 bg-slate-50 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition-all text-sm font-medium text-slate-700"
+                className="block w-full pl-10 pr-10 py-2.5 border border-slate-200 rounded-xl leading-5 bg-slate-50 placeholder-slate-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:border-indigo-400 transition-all text-sm font-medium text-slate-700"
                 placeholder="Search courses, video topics, or lecturers..."
                 value={filters.search}
                 onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
               />
+              {filters.search && (
+                <button 
+                  onClick={clearSearch}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  <X size={16} />
+                </button>
+              )}
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
              <button 
                 className="md:hidden p-2 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 rounded-lg"
                 onClick={() => setShowFiltersMobile(!showFiltersMobile)}
              >
                <Filter size={24} />
              </button>
-             <div className="hidden md:flex items-center text-xs font-semibold bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100 text-indigo-700">
-                <span className="mr-1">{filteredCourses.length}</span> Courses
+             {/* Mobile Course Count - Now Visible */}
+             <div className="flex items-center text-xs font-semibold bg-indigo-50 px-2 sm:px-3 py-1.5 rounded-full border border-indigo-100 text-indigo-700 whitespace-nowrap">
+                <span className="mr-1">{filteredCourses.length}</span> <span className="hidden sm:inline">Courses</span><span className="sm:hidden">Crse</span>
                 {filters.search && totalMatchingVideos > 0 && (
                    <>
-                     <span className="mx-2 text-indigo-300">|</span>
+                     <span className="mx-1 sm:mx-2 text-indigo-300">|</span>
                      <span className="flex items-center">
-                       <PlayCircle size={12} className="mr-1" />
-                       {totalMatchingVideos} Videos
+                       <PlayCircle size={12} className="mr-1 hidden sm:block" />
+                       {totalMatchingVideos} <span className="hidden sm:inline ml-1">Vids</span>
                      </span>
                    </>
                 )}
@@ -331,208 +346,206 @@ const App: React.FC = () => {
               </div>
               <input
                 type="text"
-                className="block w-full pl-10 pr-3 py-2 border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
+                className="block w-full pl-10 pr-10 py-2 border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm"
                 placeholder="Search..."
                 value={filters.search}
                 onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
               />
+              {filters.search && (
+                <button 
+                  onClick={clearSearch}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  <X size={16} />
+                </button>
+              )}
             </div>
-            {/* Mobile Stats */}
-            {filters.search && totalMatchingVideos > 0 && (
-              <div className="mt-2 text-xs text-indigo-600 font-medium flex items-center justify-end">
-                 <PlayCircle size={12} className="mr-1" />
-                 {totalMatchingVideos} matching videos found across {filteredCourses.length} courses
-              </div>
-            )}
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar Filters - Desktop Collapsible & Mobile Overlay */}
-        <aside 
-            className={`
-                fixed inset-y-0 left-0 z-30 bg-white border-r border-slate-200 transform transition-all duration-300 ease-in-out
-                md:relative md:transform-none md:z-auto
-                ${showFiltersMobile ? 'translate-x-0 shadow-2xl' : '-translate-x-full md:translate-x-0'}
-                ${isSidebarOpen ? 'md:w-72' : 'md:w-0 md:opacity-0 md:overflow-hidden'}
-                w-72
-            `}
-        >
-          <div className={`h-full overflow-y-auto p-5 no-scrollbar ${isSidebarOpen ? 'opacity-100' : 'md:opacity-0'} transition-opacity duration-200`}>
-            
-            {/* Mobile Header */}
-            <div className="flex justify-between items-center md:hidden mb-6">
-                <h2 className="font-bold text-lg text-slate-900">Filters</h2>
-                <button 
-                onClick={() => setShowFiltersMobile(false)}
-                className="p-1 text-slate-400 hover:text-slate-600"
-                >
-                <XCircle size={24} />
-                </button>
-            </div>
-
-            {/* Desktop Filter Header (Only when open) */}
-            <div className="hidden md:flex justify-between items-center mb-6">
-                <h2 className="font-bold text-sm text-slate-500 uppercase tracking-wider">Refine Results</h2>
-                {(filters.categories.length > 0 || filters.sources.length > 0 || filters.durationRange !== null) && (
-                  <button 
-                    onClick={resetFilters}
-                    className="text-[10px] text-indigo-600 font-bold hover:underline"
-                  >
-                    RESET
-                  </button>
-                )}
-            </div>
-
-            <div className="space-y-8 pb-10">
-                {/* Categories */}
-                {availableCategories.length > 0 && (
-                <div>
-                    <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center">
-                      <BookOpen size={16} className="mr-2 text-indigo-500" /> Category
-                    </h3>
-                    <div className="space-y-2.5">
-                    {availableCategories.map(cat => (
-                        <label key={cat} className="flex items-center space-x-3 cursor-pointer group select-none">
-                        <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all flex-shrink-0 ${filters.categories.includes(cat) ? 'bg-indigo-600 border-indigo-600 shadow-sm' : 'border-slate-300 bg-white group-hover:border-indigo-400'}`}>
-                            {filters.categories.includes(cat) && <Check size={10} className="text-white" />}
-                        </div>
-                        <input 
-                            type="checkbox" 
-                            className="hidden"
-                            checked={filters.categories.includes(cat)} 
-                            onChange={() => toggleCategory(cat)}
-                        />
-                        <span className={`text-sm ${filters.categories.includes(cat) ? 'text-indigo-700 font-semibold' : 'text-slate-600 group-hover:text-slate-900'}`}>{cat}</span>
-                        </label>
-                    ))}
-                    </div>
-                </div>
-                )}
-
-                {/* Source */}
-                {availableSources.length > 0 && (
-                <div>
-                    <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center">
-                      <Layers size={16} className="mr-2 text-indigo-500" /> Platform
-                    </h3>
-                    <div className="space-y-2.5">
-                    {availableSources.map(source => (
-                        <label key={source} className="flex items-center space-x-3 cursor-pointer group select-none">
-                        <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all flex-shrink-0 ${filters.sources.includes(source) ? 'bg-indigo-600 border-indigo-600 shadow-sm' : 'border-slate-300 bg-white group-hover:border-indigo-400'}`}>
-                            {filters.sources.includes(source) && <Check size={10} className="text-white" />}
-                        </div>
-                        <input 
-                            type="checkbox" 
-                            className="hidden"
-                            checked={filters.sources.includes(source)} 
-                            onChange={() => toggleSource(source)}
-                        />
-                        <span className={`text-sm ${filters.sources.includes(source) ? 'text-indigo-700 font-semibold' : 'text-slate-600 group-hover:text-slate-900'}`}>{source}</span>
-                        </label>
-                    ))}
-                    </div>
-                </div>
-                )}
-
-                {/* Duration */}
-                <div>
-                    <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center">
-                      <Clock size={16} className="mr-2 text-indigo-500" /> Duration
-                    </h3>
-                    <div className="flex flex-col gap-2">
-                    {DURATION_RANGES.map(range => (
-                        <button 
-                        key={range.key}
-                        onClick={() => setFilters(prev => ({...prev, durationRange: prev.durationRange === range.key ? null : range.key}))}
-                        className={`px-3 py-2 rounded-lg text-sm text-left transition-all border ${filters.durationRange === range.key ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-bold shadow-sm' : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:bg-slate-50'}`}
-                        >
-                          <div className="flex justify-between items-center">
-                            {range.label}
-                            {filters.durationRange === range.key && <Check size={14} />}
-                          </div>
-                        </button>
-                    ))}
-                    </div>
-                </div>
-
-                {/* Mobile Reset */}
-                <div className="md:hidden pt-4 border-t border-slate-100">
-                  <button 
-                    onClick={resetFilters}
-                    className="w-full py-2 text-center text-sm text-red-500 font-medium border border-red-200 rounded-lg hover:bg-red-50"
-                  >
-                    Clear All Filters
-                  </button>
-                </div>
-            </div>
+      {/* Sidebar Filters - Fixed Overlay */}
+      <aside 
+          className={`
+              fixed top-16 bottom-0 left-0 z-30 w-72 bg-white border-r border-slate-200 shadow-2xl transform transition-transform duration-300 ease-in-out
+              ${showFiltersMobile ? 'translate-x-0' : '-translate-x-full'}
+              md:${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          `}
+          style={{ height: 'calc(100vh - 64px)' }} // Ensure it doesn't go behind navbar
+      >
+        <div className="h-full overflow-y-auto p-5 pb-24 no-scrollbar">
+          
+          {/* Mobile Header */}
+          <div className="flex justify-between items-center md:hidden mb-6">
+              <h2 className="font-bold text-lg text-slate-900">Filters</h2>
+              <button 
+              onClick={() => setShowFiltersMobile(false)}
+              className="p-1 text-slate-400 hover:text-slate-600"
+              >
+              <XCircle size={24} />
+              </button>
           </div>
-        </aside>
 
-        {/* Overlay for mobile sidebar */}
-        {showFiltersMobile && (
-          <div 
-            className="fixed inset-0 z-20 bg-slate-900/50 backdrop-blur-sm md:hidden"
-            onClick={() => setShowFiltersMobile(false)}
-          />
-        )}
-
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto bg-slate-50/50">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full pb-24">
-            
-            {/* Active Filters Display (if sidebar closed or general visibility) */}
-            {(!isSidebarOpen || true) && (filters.categories.length > 0 || filters.sources.length > 0 || filters.durationRange) && (
-              <div className="mb-6 flex flex-wrap gap-2 items-center">
-                 <span className="text-xs font-semibold text-slate-400 mr-2 uppercase tracking-wide">Active Filters:</span>
-                 {filters.categories.map(c => (
-                   <button key={c} onClick={() => toggleCategory(c)} className="flex items-center gap-1 px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-medium text-indigo-600 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shadow-sm">
-                     {c} <X size={12} />
-                   </button>
-                 ))}
-                 {filters.sources.map(s => (
-                   <button key={s} onClick={() => toggleSource(s)} className="flex items-center gap-1 px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-medium text-blue-600 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shadow-sm">
-                     {s} <X size={12} />
-                   </button>
-                 ))}
-                 {filters.durationRange && (
-                   <button onClick={() => setFilters(prev => ({...prev, durationRange: null}))} className="flex items-center gap-1 px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-medium text-emerald-600 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shadow-sm">
-                     {DURATION_RANGES.find(r => r.key === filters.durationRange)?.label} <X size={12} />
-                   </button>
-                 )}
-                 <button onClick={resetFilters} className="text-xs text-slate-500 hover:text-red-600 underline ml-2">Clear all</button>
-              </div>
-            )}
-
-            {filteredCourses.length > 0 ? (
-              <div className={`grid grid-cols-1 sm:grid-cols-2 ${isSidebarOpen ? 'lg:grid-cols-3 xl:grid-cols-3' : 'lg:grid-cols-3 xl:grid-cols-4'} gap-6`}>
-                {filteredCourses.map(course => (
-                  <CourseCard 
-                    key={course.id} 
-                    course={course} 
-                    searchQuery={filters.search}
-                    onClick={handleCourseClick} 
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center py-24 text-slate-400">
-                <div className="bg-white p-6 rounded-full shadow-sm mb-4">
-                  <Search size={40} className="text-indigo-200" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-700 mb-2">No courses found</h3>
-                <p className="text-sm text-slate-500 max-w-xs text-center">We couldn't find any courses matching your specific criteria.</p>
+          {/* Desktop Filter Header (Only when open) */}
+          <div className="hidden md:flex justify-between items-center mb-6">
+              <h2 className="font-bold text-sm text-slate-500 uppercase tracking-wider">Refine Results</h2>
+              {(filters.categories.length > 0 || filters.sources.length > 0 || filters.durationRange !== null) && (
                 <button 
                   onClick={resetFilters}
-                  className="mt-6 px-6 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
+                  className="text-[10px] text-indigo-600 font-bold hover:underline"
                 >
-                  Clear all filters
+                  RESET
+                </button>
+              )}
+          </div>
+
+          <div className="space-y-8">
+              {/* Categories */}
+              {availableCategories.length > 0 && (
+              <div>
+                  <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center">
+                    <BookOpen size={16} className="mr-2 text-indigo-500" /> Category
+                  </h3>
+                  <div className="space-y-2.5">
+                  {availableCategories.map(cat => (
+                      <label key={cat} className="flex items-center space-x-3 cursor-pointer group select-none">
+                      <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all flex-shrink-0 ${filters.categories.includes(cat) ? 'bg-indigo-600 border-indigo-600 shadow-sm' : 'border-slate-300 bg-white group-hover:border-indigo-400'}`}>
+                          {filters.categories.includes(cat) && <Check size={10} className="text-white" />}
+                      </div>
+                      <input 
+                          type="checkbox" 
+                          className="hidden"
+                          checked={filters.categories.includes(cat)} 
+                          onChange={() => toggleCategory(cat)}
+                      />
+                      <span className={`text-sm ${filters.categories.includes(cat) ? 'text-indigo-700 font-semibold' : 'text-slate-600 group-hover:text-slate-900'}`}>{cat}</span>
+                      </label>
+                  ))}
+                  </div>
+              </div>
+              )}
+
+              {/* Source */}
+              {availableSources.length > 0 && (
+              <div>
+                  <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center">
+                    <Layers size={16} className="mr-2 text-indigo-500" /> Platform
+                  </h3>
+                  <div className="space-y-2.5">
+                  {availableSources.map(source => (
+                      <label key={source} className="flex items-center space-x-3 cursor-pointer group select-none">
+                      <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all flex-shrink-0 ${filters.sources.includes(source) ? 'bg-indigo-600 border-indigo-600 shadow-sm' : 'border-slate-300 bg-white group-hover:border-indigo-400'}`}>
+                          {filters.sources.includes(source) && <Check size={10} className="text-white" />}
+                      </div>
+                      <input 
+                          type="checkbox" 
+                          className="hidden"
+                          checked={filters.sources.includes(source)} 
+                          onChange={() => toggleSource(source)}
+                      />
+                      <span className={`text-sm ${filters.sources.includes(source) ? 'text-indigo-700 font-semibold' : 'text-slate-600 group-hover:text-slate-900'}`}>{source}</span>
+                      </label>
+                  ))}
+                  </div>
+              </div>
+              )}
+
+              {/* Duration */}
+              <div>
+                  <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center">
+                    <Clock size={16} className="mr-2 text-indigo-500" /> Duration
+                  </h3>
+                  <div className="flex flex-col gap-2">
+                  {DURATION_RANGES.map(range => (
+                      <button 
+                      key={range.key}
+                      onClick={() => setFilters(prev => ({...prev, durationRange: prev.durationRange === range.key ? null : range.key}))}
+                      className={`px-3 py-2 rounded-lg text-sm text-left transition-all border ${filters.durationRange === range.key ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-bold shadow-sm' : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:bg-slate-50'}`}
+                      >
+                        <div className="flex justify-between items-center">
+                          {range.label}
+                          {filters.durationRange === range.key && <Check size={14} />}
+                        </div>
+                      </button>
+                  ))}
+                  </div>
+              </div>
+
+              {/* Mobile Reset */}
+              <div className="md:hidden pt-4 border-t border-slate-100">
+                <button 
+                  onClick={resetFilters}
+                  className="w-full py-2 text-center text-sm text-red-500 font-medium border border-red-200 rounded-lg hover:bg-red-50"
+                >
+                  Clear All Filters
                 </button>
               </div>
-            )}
           </div>
-        </main>
-      </div>
+        </div>
+      </aside>
+
+      {/* Overlay for mobile sidebar */}
+      {showFiltersMobile && (
+        <div 
+          className="fixed inset-0 z-20 bg-slate-900/50 backdrop-blur-sm md:hidden"
+          onClick={() => setShowFiltersMobile(false)}
+        />
+      )}
+
+      {/* Main Content Area */}
+      <main className="w-full pb-20"> 
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+          
+          {/* Active Filters Display */}
+          {(filters.categories.length > 0 || filters.sources.length > 0 || filters.durationRange) && (
+            <div className="mb-6 flex flex-wrap gap-2 items-center">
+                <span className="text-xs font-semibold text-slate-400 mr-2 uppercase tracking-wide">Active Filters:</span>
+                {filters.categories.map(c => (
+                  <button key={c} onClick={() => toggleCategory(c)} className="flex items-center gap-1 px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-medium text-indigo-600 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shadow-sm">
+                    {c} <X size={12} />
+                  </button>
+                ))}
+                {filters.sources.map(s => (
+                  <button key={s} onClick={() => toggleSource(s)} className="flex items-center gap-1 px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-medium text-blue-600 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shadow-sm">
+                    {s} <X size={12} />
+                  </button>
+                ))}
+                {filters.durationRange && (
+                  <button onClick={() => setFilters(prev => ({...prev, durationRange: null}))} className="flex items-center gap-1 px-3 py-1 bg-white border border-slate-200 rounded-full text-xs font-medium text-emerald-600 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors shadow-sm">
+                    {DURATION_RANGES.find(r => r.key === filters.durationRange)?.label} <X size={12} />
+                  </button>
+                )}
+                <button onClick={resetFilters} className="text-xs text-slate-500 hover:text-red-600 underline ml-2">Clear all</button>
+            </div>
+          )}
+
+          {filteredCourses.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredCourses.map(course => (
+                <CourseCard 
+                  key={course.id} 
+                  course={course} 
+                  searchQuery={filters.search}
+                  onClick={handleCourseClick} 
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-24 text-slate-400">
+              <div className="bg-white p-6 rounded-full shadow-sm mb-4">
+                <Search size={40} className="text-indigo-200" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-700 mb-2">No courses found</h3>
+              <p className="text-sm text-slate-500 max-w-xs text-center">We couldn't find any courses matching your specific criteria.</p>
+              <button 
+                onClick={resetFilters}
+                className="mt-6 px-6 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-sm"
+              >
+                Clear all filters
+              </button>
+            </div>
+          )}
+        </div>
+      </main>
 
       {/* Scroll to Top Button */}
       {showScrollTop && (
@@ -546,7 +559,7 @@ const App: React.FC = () => {
       )}
 
       {/* Fixed Footer */}
-      <footer className="bg-white border-t border-slate-200 py-4 z-40">
+      <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 py-4 z-40">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between text-xs text-slate-500">
            <div className="flex items-center gap-2">
              <div className="bg-slate-100 p-1 rounded">
