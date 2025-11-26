@@ -37,7 +37,7 @@ export interface FilterState {
   search: string;
   categories: string[];
   sources: string[];
-  maxDuration: number | null; // minutes
+  durationRange: string | null; // Changed to string key for granular ranges
 }
 
 export interface ChatMessage {
