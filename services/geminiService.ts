@@ -4,8 +4,19 @@ import { Course } from '../types';
 let genAI: GoogleGenAI | null = null;
 
 export const initializeGemini = () => {
-  // Safely check for process.env to avoid ReferenceErrors in browser environments
-  const apiKey = (typeof process !== 'undefined' && process.env) ? process.env.API_KEY : null;
+  let apiKey: string | undefined | null = null;
+
+  // Check process.env safely
+  if (typeof process !== 'undefined' && process.env) {
+    apiKey = process.env.API_KEY;
+  }
+  
+  // Fallback to import.meta.env for Vite/Browser environments
+  // @ts-ignore
+  if (!apiKey && typeof import.meta !== 'undefined' && import.meta.env) {
+    // @ts-ignore
+    apiKey = import.meta.env.API_KEY;
+  }
   
   if (apiKey) {
     genAI = new GoogleGenAI({ apiKey });

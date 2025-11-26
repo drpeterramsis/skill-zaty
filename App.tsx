@@ -99,7 +99,6 @@ const App: React.FC = () => {
   const availableCategories = useMemo(() => {
     const cats = new Set<CourseCategory>();
     courses.forEach(c => cats.add(c.category));
-    // Sort logic to keep it consistent, e.g., alphabetical
     return Array.from(cats).sort();
   }, [courses]);
 
